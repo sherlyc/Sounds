@@ -26,6 +26,8 @@ export default class SearchForm extends React.Component {
         [field]: evt.target.value
       }
     })
+    this.props.searchSounds(this.state.item)
+
   }
 
   render () {
