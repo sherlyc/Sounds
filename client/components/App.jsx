@@ -1,77 +1,37 @@
 import React from 'react'
-
 import * as api from '../api'
-import AddWidget from './AddWidget'
-import WidgetList from './WidgetList'
-import WidgetDetails from './WidgetDetails'
-import ErrorMessage from './ErrorMessage'
+import List from './List'
+import SearchForm from './SearchForm'
 
 export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      error: null,
-      widgets: [],
-      activeWidget: null,
-      detailsVisible: false,
-      addWidgetVisible: false
+      sounds: []
     }
   }
 
   componentDidMount () {
-    api.getWidgets((err, widgets) => this.renderWidgets(err, widgets))
+    api.getTracks(this.renderSounds.bind(this))
   }
 
-  renderWidgets (err, widgets) {
+  renderSounds (err, sounds) {
     this.setState({
-      error: err,
-      widgets: widgets || []
+      sounds: sounds || []
     })
   }
 
-  refreshList (err) {
-    this.setState({
-      error: err,
-      addWidgetVisible: false
-    })
-    api.getWidgets(this.renderWidgets.bind(this))
-  }
-
-  showAddWidget () {
-    this.setState({
-      addWidgetVisible: true
-    })
+  searchSounds (item) {
+    console.log(item)
   }
 
   render () {
     return (
       <div>
-        <ErrorMessage error={this.state.error} />
-        <h1>Widgets FTW!</h1>
-        <WidgetList
-          showDetails={(widget) => this.showDetails(widget)}
-          widgets={this.state.widgets} />
-        <p><a href='#' onClick={(e) => this.showAddWidget(e)}>Add widget</a></p>
-        {this.state.addWidgetVisible && <AddWidget
-          finishAdd={(err) => this.refreshList(err)} />}
-        {this.state.detailsVisible && <WidgetDetails
-          isVisible={this.state.detailsVisible}
-          hideDetails={() => this.hideDetails()}
-          widget={this.state.activeWidget} />}
+          <SearchForm searchSounds={this.searchSounds} />
+          <List sounds={this.state.sounds} />
       </div>
     )
   }
 
-  showDetails (widget) {
-    this.setState({
-      activeWidget: widget,
-      detailsVisible: true
-    })
-  }
-
-  hideDetails () {
-    this.setState({
-      detailsVisible: false
-    })
-  }
 }
