@@ -12,7 +12,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount () {
-    api.getTracks(this.renderSounds.bind(this))
+    api.getTracks(null, this.renderSounds.bind(this))
   }
 
   renderSounds (err, sounds) {
@@ -22,13 +22,13 @@ export default class App extends React.Component {
   }
 
   searchSounds (item) {
-    console.log(item)
+    api.getTracks(item.query, this.renderSounds.bind(this))
   }
 
   render () {
     return (
       <div>
-          <SearchForm searchSounds={this.searchSounds} />
+          <SearchForm searchSounds={this.searchSounds.bind(this)} />
           <List sounds={this.state.sounds} />
       </div>
     )
